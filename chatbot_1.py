@@ -70,8 +70,8 @@ dados_admin = {
 def status_recarga() -> str:
     """Retorna o status atual da recarga e o tempo restante."""
     return (
-        f"🔋 Status atual da recarga: {dados_usuario['status_recarga']}\n"
-        f"⏱️  Tempo estimado para conclusão: {dados_usuario['tempo_restante']}"
+        f"Status atual da recarga: {dados_usuario['status_recarga']}\n"
+        f"Tempo estimado para conclusão: {dados_usuario['tempo_restante']}"
     )
 
 
@@ -82,17 +82,17 @@ def info_pagamento() -> str:
         for mes, valor in dados_usuario["historico_pagamentos"].items()
     )
     return (
-        f"💳 Cobrança da sessão atual: {dados_usuario['pagamento_atual']}\n"
-        f"📋 Histórico de pagamentos:\n{historico}"
+        f"Cobrança da sessão atual: {dados_usuario['pagamento_atual']}\n"
+        f"Histórico de pagamentos:\n{historico}"
     )
 
 
 def carregadores_disponiveis() -> str:
     """Informa quantos carregadores estão disponíveis no momento."""
     qtd = dados_admin["carregadores_disponiveis"]
-    emoji = "✅" if qtd > 0 else "❌"
+    emoji = "OK" if qtd > 0 else "INDISPONIVEL"
     return (
-        f"{emoji} Carregadores disponíveis no momento: {qtd}\n"
+        f"[{emoji}] Carregadores disponíveis no momento: {qtd}\n"
         f"   Localize o mais próximo pelo mapa do aplicativo."
     )
 
@@ -100,40 +100,40 @@ def carregadores_disponiveis() -> str:
 def listar_alertas() -> str:
     """Lista todos os alertas ativos no sistema."""
     if dados_admin["alertas"]:
-        lista = "\n".join(f"   ⚠️  {a}" for a in dados_admin["alertas"])
-        return f"🚨 Alertas ativos:\n{lista}"
-    return "✅ Nenhum alerta ativo no momento."
+        lista = "\n".join(f"   [ALERTA] {a}" for a in dados_admin["alertas"])
+        return f"Alertas ativos:\n{lista}"
+    return "Nenhum alerta ativo no momento."
 
 
 def listar_falhas() -> str:
     """Lista todas as falhas registradas nos eletropostos."""
     if dados_admin["falhas"]:
-        lista = "\n".join(f"   ❌ {f}" for f in dados_admin["falhas"])
-        return f"🔧 Falhas registradas:\n{lista}"
-    return "✅ Nenhuma falha registrada no momento."
+        lista = "\n".join(f"   [FALHA] {f}" for f in dados_admin["falhas"])
+        return f"Falhas registradas:\n{lista}"
+    return "Nenhuma falha registrada no momento."
 
 
 def monitoramento_energetico() -> str:
     """Retorna o status geral do monitoramento energético."""
-    return f"⚡ Monitoramento energético:\n   {dados_admin['monitoramento_energetico']}"
+    return f"Monitoramento energetico:\n   {dados_admin['monitoramento_energetico']}"
 
 
 def relatorio_eletropostos() -> str:
     """Exibe o relatório completo com o status de cada eletroposto."""
     def icone(status):
         if status == "EM USO":
-            return "🟢"
+            return "[EM USO]"
         if status == "VAZIO":
-            return "⚫"
+            return "[VAZIO]"
         if "FINAL" in status:
-            return "🟡"
-        return "🔴"
+            return "[FINALIZANDO]"
+        return "[ERRO]"
 
     linhas = "\n".join(
         f"   {icone(s)} {ep}: {s}"
         for ep, s in dados_admin["relatorio_eletropostos"].items()
     )
-    return f"📊 Relatório dos eletropostos:\n{linhas}"
+    return f"Relatorio dos eletropostos:\n{linhas}"
 
 
 # ──────────────────────────────────────────────
@@ -239,7 +239,7 @@ NUNCA:
 TOM:
   - Profissional e direto para operadores e técnicos
   - Simples e acessível para usuários finais
-  - Use emojis com moderação para facilitar leitura de status
+  - Use marcadores de texto como [ALERTA], [FALHA], [OK] para facilitar leitura de status
 """
 
 
@@ -313,9 +313,9 @@ def processar_mensagem(historico: list) -> str:
 def iniciar_chatbot():
     banner = """
 ╔══════════════════════════════════════════════════╗
-║        ChatCore — ChargeGrid Assistant           ║
-║      Assistente Virtual GoodWe (OpenAI API)      ║
-║      Digite 'sair' ou 'tchau' para encerrar      ║
+║          ChatCore — ChargeGrid Assistant         ║
+║       Assistente Virtual GoodWe (OpenAI API)     ║
+║       Digite 'sair' ou 'tchau' para encerrar     ║
 ╚══════════════════════════════════════════════════╝
     """
     print(banner)
@@ -330,14 +330,14 @@ def iniciar_chatbot():
         try:
             entrada = input("Você: ").strip()
         except (KeyboardInterrupt, EOFError):
-            print("\n\nChatCore: Sessão encerrada. Até logo! ⚡")
+            print("\n\nChatCore: Sessão encerrada. Ate logo!")
             break
 
         if not entrada:
             continue
 
         if any(d in entrada.lower() for d in DESPEDIDAS):
-            print("\nChatCore: 👋 Até logo! Qualquer dúvida é só chamar. Boa recarga! ⚡\n")
+            print("\nChatCore: Ate logo! Qualquer duvida e so chamar. Boa recarga!\n")
             break
 
         # Adiciona a mensagem do usuário ao histórico
